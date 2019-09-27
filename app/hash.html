@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+
+    <style>
+
+        .upload-wrap{margin:50px;padding-left: 15px;width: 50%;height: 80px;border: 1px solid #ddd;background: #eee;font-size: 14px;position:relative;}
+        .upload-wrap label,.upload-wrap form,.upload-wrap input{position:absolute;left:15px;top:0;width: 120px;height: 24px;color:#fff;text-align: center;}
+        .upload-wrap label{height: 26px;line-height: 26px;background: #00A274;}
+        .upload-wrap form{opacity: 0;filter: alpha(opacity=0);}
+        .upload-wrap form input{left:0;cursor:pointer;}
+        .upload-wrap .upload-note-el{margin-top: 28px;width: 100%;height: 20px;display: block;font-size: 12px;line-height: 20px;color:red;}
+        .upload-wrap .file-name{position:absolute;left:145px;top:0;width: 100%;height: 26px;line-height: 26px;}
+        .upload-wrap .upload-submit{display: block;margin-top: 5px;width: 120px;height: 26px;border: none;background: #00A274;color:#fff;outline:none;cursor:pointer;}
+
+
+    </style>
+</head>
+<body>
+
+    <div class="upload-wrap">
+        <label for="upload-form">选择文件</label>
+        <form action="" id="upload-form" enctype="multipart/form-data">
+            <input id="file-el" name="file-el" type="file" />
+        </form>
+        <span class="file-name">*请选择文件</span>
+        <span class="upload-note-el"></span>
+        <button class="upload-submit">上传</button>
+    </div>
+
+
+<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+    function checkSupportFileAPI() {
+        if (window.File && window.FileList && window.FileReader) {
+            return true;
+
+        } else {
+            return false;
+
+        }
+    }
+
+    if (checkSupportFileAPI()) {
+        console.log("支持")
+    }else {
+        console.log("不支持")
+    };
+
+    navigator.hasxmlProgress = (function() {
+        var r = window.XMLHttpRequest && new window.XMLHttpRequest() || '';
+        return 'onprogress' in r;
+    })();
+
+    if (navigator.hasxmlProgress) {
+        console.log("支持进度条")
+    }
+</script>
+</body>
+</html>

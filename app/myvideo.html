@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style type="text/css">
+        .screen_shot_btn,.screen_save_btn{display: inline-block;width: 130px;height: 36px;text-align: center;line-height: 36px;text-decoration: none;background: #4473C2;border: none;border-radius: 8px;margin:0 5px;color:#fff;outline: none;}
+        .btn-wrap{margin:15px 0;}
+        .img_show_wrap{width: 720px;height: 450px;margin:15px 0;position:relative;}
+        #image_el,#V2I_canvas{position:absolute;width: 720px;height: 450px;top:0;left:0;}
+
+        .canvasWrap{width: 540px;height: 320px;border: 1px solid #000;}
+        #videoCanvas{border: 1px solid #000;}
+    </style>
+</head>
+<body>
+
+    <div class="btn-wrap">
+        <a id="screen_shot_btn"  class="screen_shot_btn" href="javascript:">截图</a>
+        <a id="screen_save_btn" class="screen_save_btn" href="javascript:">下载</a>
+        <a id="cutVideo" class="screen_save_btn" href="javascript:">录制</a>
+        <a id="get" class="screen_save_btn" href="javascript:">下载录制视频</a>
+    </div>
+
+
+    <video id="myVideo" autoplay controls crossorigin="*" width="720" height="450">
+    </video>
+    <!-- 录制视频 -->
+    <video autobuffer autoloop loop controls id="#my-recorddisplay" width="720" height="450"></video>
+
+    <video autobuffer autoloop loop controls id="#myVideo1" width="720" height="450">
+    </video>
+
+    <!-- 截屏 -->
+    <div class="img_show_wrap">
+        <canvas width="720" height="450" id="V2I_canvas" ></canvas>
+        <img id="image_el" src="" alt="">
+    </div>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/flv.min.js"></script>
+    <script type="text/javascript" src="js/myvideo.js"></script>
+</body>
+</html>

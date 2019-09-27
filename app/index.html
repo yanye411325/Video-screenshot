@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <form action="http://localhost:8080/examples" type="POST">
+        用户名：<input name="user" type="text"><br>
+        密&emsp;码：<input name="pas" type="password"><br>
+        <input value="提交" type="submit">
+    </form>  -->
+    <button>get</button>
+    <script src="./js/jquery-1.11.3.min.js"></script>
+    <script>
+        $("button").click(function () {
+
+            $.ajax({
+                url: "http://localhost:3000/examples/1.json",
+                type:"GET",
+                dataType:"json",
+                success:function(data){
+                    console.log(data.name);
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            })
+        })
+    </script>
+
+</body>
+
+</html>

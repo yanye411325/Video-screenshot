@@ -1,0 +1,182 @@
+<html >
+<head>
+<meta charset="utf-8" />
+<title></title>
+
+</head>
+<script src="./js/jquery-1.11.3.min.js"></script>
+<!-- <link href="videojs.css" rel="stylesheet">
+
+<script src="video.js"></script> -->
+<!-- <script src="./js/videojs-flash.js"></script> -->
+<script src="./js/flv.min.js"></script>
+
+  <!-- If you'd like to support IE8 -->
+  <script src="https://cdn.bootcss.com/video.js/5.20.0/ie8/videojs-ie8.js"></script>
+<body>
+   <div>
+   <video id="my-video"  width="640" height="480" autoplay controls preload="none" crossOrigin="anonymous">
+    <source src="rtmp://192.168.30.217:1935/live/livestream1"  type='rtmp/flv'>
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+    </video>
+
+    <video id="my-recordvideo"  width="640" height="480" autoplay="false" controls preload="none" crossOrigin="anonymous">
+    <source src="rtmp://192.168.30.217:1935/live/livestream1"  type='rtmp/flv'>
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+    </video>
+  <br/><br/><br/><br/><br/>
+  <video id="my-recorddisplay"  width="640" height="480" autoplay="false" controls preload="none" crossOrigin="anonymous">
+    <source src="rtmp://192.168.30.217:1935/live/livestream1"  type='rtmp/flv'>
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+    </video>
+  <canvas style="position:absolute; top:300px; left:108px; width="640"; height="264""></canvas>
+  <img id="show_img_el" src="" alt="" />
+</div>
+<div  style="position:absolute; top:400px;">
+  <p>
+    <input type="button" id="play" value="截图">
+    <button class="recorderControl">录制</button>
+    <span id="position">00:00</span> / <span id="duration"></span>
+  </p>
+  </div>
+<script >
+
+    var addEvent = (function () {
+        if (document.addEventListener) {
+            return function (el, type, fn) {
+                if (el && el.nodeName || el === window) {
+                    el.addEventListener(type, fn, false);
+                } else if (el && el.length) {
+                    for (var i = 0; i < el.length; i++) {
+                        addEvent(el[i], type, fn);
+                    }
+                }
+            };
+        } else {
+            return function (el, type, fn) {
+                if (el && el.nodeName || el === window) {
+                    el.attachEvent('on' + type, function () { return fn.call(el, window.event); });
+                } else if (el && el.length) {
+                    for (var i = 0; i < el.length; i++) {
+                        addEvent(el[i], type, fn);
+                    }
+                }
+            };
+        }
+    })();
+
+</script>
+<script>
+    var video = document.getElementById("my-video");
+    var togglePlay = document.querySelector('#play');
+    var position = document.querySelector('#position');
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var player = document.getElementById('my-video');
+    if (flvjs.isSupported())
+    {
+        var flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        "isLive": true,//<====加个这个
+        url: 'http://192.168.30.218:8100/movie1',//<==自行修改
+        });
+        flvPlayer.attachMediaElement(player);
+        flvPlayer.load(); //加载
+        flv_start();
+    }
+
+    function flv_start() {
+        player.play();
+    }
+    $("#play").on("click",function(){
+        canvas.setAttribute('height', Math.floor(video.height));
+        canvas.setAttribute('width', Math.floor(video.width));
+
+        //ctx.translate(0, canvas.height );
+        //ctx.scale(1, -1);
+        //ctx.globalAlpha = 0.3;
+        ctx.drawImage(video, 0, 0, video.width*2, video.height*2,0,0, canvas.width, canvas.height);
+        $('#show_img_el').attr('src', canvas.toDataURL());
+    })
+
+
+
+    function startCanvas() {
+        canvas.setAttribute('height', Math.floor(video.height));
+        canvas.setAttribute('width', Math.floor(video.width));
+
+        //ctx.translate(0, canvas.height );
+        //ctx.scale(1, -1);
+        //ctx.globalAlpha = 0.3;
+        ctx.drawImage(video, 0, 0, video.width*2, video.height*2,0,0, canvas.width, canvas.height);
+        $('#show_img_el').attr('src', canvas.toDataURL());
+
+    }
+
+    function asTime(t) {
+        t = Math.round(t);
+        var s = t % 60;
+        var m = Math.round(t / 60);
+
+        return two(m) + ':' + two(s);
+    }
+
+    function two(s) {
+        s += "";
+        if (s.length < 2) s = "0" + s;
+        return s;
+    }
+
+    //videojs.options.flash.swf = "https://cdn.bootcss.com/video.js/5.20.0/video-js.swf";
+
+    var promise= navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    promise.then(function(stream){
+        var video=document.getElementById("my-recordvideo");
+        video.src = URL.createObjectURL(stream);
+        var recorder=new MediaRecorder(stream);
+        var recorderControl=document.querySelector(".recorderControl");
+        recorderControl.onclick=function(){
+            //this.textContent=="录制"?video.play():video.pause();
+            this.textContent=="录制"?recorder.start():recorder.stop();
+            this.textContent=this.textContent=="录制"?"停止":"录制";
+            };
+        var buffers=[];
+        recorder.ondataavailable=function(event){
+            buffers=event.data;
+
+        }
+        var downloadButton=document.querySelector(".downloadButton");
+        recorder.onstop=function(){
+            var url3=URL.createObjectURL(buffers);
+            var player3 = document.getElementById('my-recorddisplay');
+            if (flvjs.isSupported())
+            {
+                var flvPlayer = flvjs.createPlayer({
+                type: 'video/webm',
+                "isLive": true,//<====加个这个
+                url: url3,//<==自行修改
+                });
+                flvPlayer.attachMediaElement(player3);
+                flvPlayer.load(); //加载
+                flv_start();
+            }
+            //downloadButton.click();
+            buffers=null;
+        };
+     }).catch(function(error){
+        console.log(error);
+     });
+</script>
+</body>
+
+</html>
